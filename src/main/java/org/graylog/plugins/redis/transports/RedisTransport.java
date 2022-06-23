@@ -72,7 +72,10 @@ public class RedisTransport extends ThrottleableTransport {
     @Override
     protected void doLaunch(final MessageInput input) throws MisfireException {
         client = new RedisClientBuilder(configuration).buildClient();
+    	LOG.info("Launching RedisTransport \"{}\"", configuration.getString(RedisClientConfiguration.CK_REDIS_URI, "redis://127.0.0.1/"));
+    	
         connection = client.connectPubSub(new ByteArrayCodec());
+    	LOG.info("RedisTransport: got connection");
         connection.addListener(new RedisPubSubListener<byte[], byte[]>() {
             private void processMessage(byte[] message) {
                 final RawMessage rawMessage = new RawMessage(message);
@@ -100,32 +103,34 @@ public class RedisTransport extends ThrottleableTransport {
 
             @Override
             public void subscribed(byte[] channel, long count) {
-                LOG.debug("Subscribed to channel \"{}\"", new String(channel, UTF_8));
+                LOG.info("Subscribed to channel \"{}\"", new String(channel, UTF_8));
             }
 
             @Override
             public void psubscribed(byte[] pattern, long count) {
-                LOG.debug("Subscribed to pattern \"{}\"", new String(pattern, UTF_8));
+                LOG.info("Subscribed to pattern \"{}\"", new String(pattern, UTF_8));
             }
 
             @Override
             public void unsubscribed(byte[] channel, long count) {
-                LOG.debug("Unsubscribed from channel \"{}\"", new String(channel, UTF_8));
+                LOG.info("Unsubscribed from channel \"{}\"", new String(channel, UTF_8));
             }
 
             @Override
             public void punsubscribed(byte[] pattern, long count) {
-                LOG.debug("Unsubscribed from pattern \"{}\"", new String(pattern, UTF_8));
+                LOG.info("Unsubscribed from pattern \"{}\"", new String(pattern, UTF_8));
             }
         });
 
         final String channelsString = configuration.getString(CK_CHANNELS, "");
         byte[][] channels = splitToByteArray(channelsString);
+    	LOG.info("RedisTransport: checking channels " + channelsString);
         if (channels.length > 0) {
             connection.sync().subscribe(channels);
         }
 
         final String patternsString = configuration.getString(CK_PATTERNS, "");
+    	LOG.info("RedisTransport: checking patterns " + patternsString);
         byte[][] patterns = splitToByteArray(patternsString);
         if (patterns.length > 0) {
             connection.sync().psubscribe(patterns);

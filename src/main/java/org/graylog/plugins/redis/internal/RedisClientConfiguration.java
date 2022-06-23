@@ -12,7 +12,7 @@ import org.graylog2.plugin.configuration.fields.TextField;
 import static java.util.Objects.requireNonNull;
 
 public class RedisClientConfiguration extends ConfigurationRequest {
-    static final String CK_REDIS_URI = "redis_uri";
+    public static final String CK_REDIS_URI = "redis_uri";
     static final String CK_TIMEOUT = "timeout";
     static final String CK_THREADS_IO = "threads_io";
     static final String CK_THREADS_COMPUTATION = "threads_computation";
