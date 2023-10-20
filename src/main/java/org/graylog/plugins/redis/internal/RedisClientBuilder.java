@@ -3,8 +3,12 @@ package org.graylog.plugins.redis.internal;
 import com.lambdaworks.redis.ClientOptions;
 import com.lambdaworks.redis.RedisClient;
 import com.lambdaworks.redis.RedisURI;
+import com.lambdaworks.redis.SslOptions;
 import com.lambdaworks.redis.resource.ClientResources;
 import com.lambdaworks.redis.resource.DefaultClientResources;
+
+import au.com.bytecode.opencsv.ResultSetHelperService;
+
 import org.graylog2.plugin.configuration.Configuration;
 
 import java.util.concurrent.TimeUnit;
@@ -20,6 +24,8 @@ public class RedisClientBuilder {
 
     public RedisClient buildClient() {
         final String redisURIString = configuration.getString(RedisClientConfiguration.CK_REDIS_URI, "redis://127.0.0.1/");
+        final String redisSSLSkipVerify = configuration.getString(RedisClientConfiguration.CK_REDIS_SSL_SKIPVERIFY, "false");
+        final String redisSSLUseTLS = configuration.getString(RedisClientConfiguration.CK_REDIS_SSL_TLS, "false");
         final int timeout = configuration.getInt(RedisClientConfiguration.CK_TIMEOUT, 60);
         final int threadsIo = configuration.getInt(RedisClientConfiguration.CK_THREADS_IO, DefaultClientResources.DEFAULT_IO_THREADS);
         final int threadsComputation = configuration.getInt(RedisClientConfiguration.CK_THREADS_COMPUTATION, DefaultClientResources.DEFAULT_COMPUTATION_THREADS);
@@ -40,6 +46,11 @@ public class RedisClientBuilder {
                 .build();
 
         final RedisURI redisURI = RedisURI.create(redisURIString);
+        if("true".equalsIgnoreCase(redisSSLSkipVerify))
+        	redisURI.setVerifyPeer(false);
+        if("true".equalsIgnoreCase(redisSSLUseTLS))
+        	redisURI.setStartTls(true);
+        
         final RedisClient redisClient = RedisClient.create(clientResources, redisURI);
         redisClient.setDefaultTimeout(timeout, TimeUnit.SECONDS);
         redisClient.setOptions(clientOptions);

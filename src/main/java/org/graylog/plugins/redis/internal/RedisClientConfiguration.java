@@ -13,6 +13,8 @@ import static java.util.Objects.requireNonNull;
 
 public class RedisClientConfiguration extends ConfigurationRequest {
     public static final String CK_REDIS_URI = "redis_uri";
+    public static final String CK_REDIS_SSL_SKIPVERIFY = "ssl_skip_verify";
+    public static final String CK_REDIS_SSL_TLS = "ssl_use_tls";
     static final String CK_TIMEOUT = "timeout";
     static final String CK_THREADS_IO = "threads_io";
     static final String CK_THREADS_COMPUTATION = "threads_computation";
