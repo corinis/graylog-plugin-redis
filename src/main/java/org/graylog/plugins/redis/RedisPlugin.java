@@ -16,13 +16,14 @@
  */
 package org.graylog.plugins.redis;
 
-import com.google.auto.service.AutoService;
+import java.util.Collection;
+import java.util.Collections;
+
 import org.graylog2.plugin.Plugin;
 import org.graylog2.plugin.PluginMetaData;
 import org.graylog2.plugin.PluginModule;
 
-import java.util.Collection;
-import java.util.Collections;
+import com.google.auto.service.AutoService;
 
 @AutoService(Plugin.class)
 public class RedisPlugin implements Plugin {

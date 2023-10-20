@@ -16,11 +16,12 @@
  */
 package org.graylog.plugins.redis;
 
-import com.lambdaworks.redis.RedisClient;
-import com.lambdaworks.redis.RedisURI;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import io.lettuce.core.RedisClient;
+import io.lettuce.core.RedisURI;
 
 public class BasicRedisIT {
     private static final String REDIS_HOST = System.getProperty("redis.host", "127.0.0.1");

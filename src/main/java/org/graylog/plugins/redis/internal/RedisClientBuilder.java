@@ -1,19 +1,16 @@
 package org.graylog.plugins.redis.internal;
 
-import com.lambdaworks.redis.ClientOptions;
-import com.lambdaworks.redis.RedisClient;
-import com.lambdaworks.redis.RedisURI;
-import com.lambdaworks.redis.SslOptions;
-import com.lambdaworks.redis.resource.ClientResources;
-import com.lambdaworks.redis.resource.DefaultClientResources;
-
-import au.com.bytecode.opencsv.ResultSetHelperService;
-
-import org.graylog2.plugin.configuration.Configuration;
+import static java.util.Objects.requireNonNull;
 
 import java.util.concurrent.TimeUnit;
 
-import static java.util.Objects.requireNonNull;
+import org.graylog2.plugin.configuration.Configuration;
+
+import io.lettuce.core.ClientOptions;
+import io.lettuce.core.RedisClient;
+import io.lettuce.core.RedisURI;
+import io.lettuce.core.resource.ClientResources;
+import io.lettuce.core.resource.DefaultClientResources;
 
 public class RedisClientBuilder {
     private final Configuration configuration;

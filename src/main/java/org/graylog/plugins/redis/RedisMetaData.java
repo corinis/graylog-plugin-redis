@@ -16,13 +16,13 @@
  */
 package org.graylog.plugins.redis;
 
-import org.graylog2.plugin.PluginMetaData;
-import org.graylog2.plugin.ServerStatus;
-import org.graylog2.plugin.Version;
-
 import java.net.URI;
 import java.util.Collections;
 import java.util.Set;
+
+import org.graylog2.plugin.PluginMetaData;
+import org.graylog2.plugin.ServerStatus;
+import org.graylog2.plugin.Version;
 
 public class RedisMetaData implements PluginMetaData {
     private static final String PLUGIN_PROPERTIES = "org.graylog.plugins.graylog-plugin-redis/graylog-plugin.properties";

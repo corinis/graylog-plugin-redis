@@ -16,6 +16,9 @@
  */
 package org.graylog.plugins.redis;
 
+import java.util.Collections;
+import java.util.Set;
+
 import org.graylog.plugins.redis.inputs.GELFRedisInput;
 import org.graylog.plugins.redis.inputs.RawRedisInput;
 import org.graylog.plugins.redis.inputs.SyslogRedisInput;
@@ -23,9 +26,6 @@ import org.graylog.plugins.redis.outputs.GELFRedisOutput;
 import org.graylog.plugins.redis.transports.RedisTransport;
 import org.graylog2.plugin.PluginConfigBean;
 import org.graylog2.plugin.PluginModule;
-
-import java.util.Collections;
-import java.util.Set;
 
 public class RedisModule extends PluginModule {
     @Override

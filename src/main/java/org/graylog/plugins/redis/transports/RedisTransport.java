@@ -16,13 +16,13 @@
  */
 package org.graylog.plugins.redis.transports;
 
-import com.codahale.metrics.MetricSet;
-import com.google.common.eventbus.EventBus;
-import com.google.inject.assistedinject.Assisted;
-import com.lambdaworks.redis.RedisClient;
-import com.lambdaworks.redis.codec.ByteArrayCodec;
-import com.lambdaworks.redis.pubsub.RedisPubSubListener;
-import com.lambdaworks.redis.pubsub.StatefulRedisPubSubConnection;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.stream.StreamSupport;
+
+import javax.inject.Inject;
+
 import org.graylog.plugins.redis.internal.RedisClientBuilder;
 import org.graylog.plugins.redis.internal.RedisClientConfiguration;
 import org.graylog2.plugin.LocalMetricRegistry;
@@ -41,11 +41,13 @@ import org.graylog2.plugin.journal.RawMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.stream.StreamSupport;
+import com.codahale.metrics.MetricSet;
+import com.google.common.eventbus.EventBus;
+import com.google.inject.assistedinject.Assisted;
+
+import io.lettuce.core.RedisClient;
+import io.lettuce.core.pubsub.RedisPubSubListener;
+import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
 
 public class RedisTransport extends ThrottleableTransport {
     private static final Logger LOG = LoggerFactory.getLogger(RedisTransport.class);
@@ -74,7 +76,7 @@ public class RedisTransport extends ThrottleableTransport {
         client = new RedisClientBuilder(configuration).buildClient();
     	LOG.info("Launching RedisTransport \"{}\"", configuration.getString(RedisClientConfiguration.CK_REDIS_URI, "redis://127.0.0.1/"));
     	
-        connection = client.connectPubSub(new ByteArrayCodec());
+        connection = client.connectPubSub(new io.lettuce.core.codec.ByteArrayCodec());
     	LOG.info("RedisTransport: got connection");
         connection.addListener(new RedisPubSubListener<byte[], byte[]>() {
             private void processMessage(byte[] message) {

@@ -1,15 +1,17 @@
 package org.graylog.plugins.redis.internal;
 
-import com.google.common.collect.ImmutableList;
-import com.lambdaworks.redis.ClientOptions;
-import com.lambdaworks.redis.resource.DefaultClientResources;
+import static java.util.Objects.requireNonNull;
+
 import org.graylog2.plugin.configuration.ConfigurationRequest;
 import org.graylog2.plugin.configuration.fields.BooleanField;
 import org.graylog2.plugin.configuration.fields.ConfigurationField;
 import org.graylog2.plugin.configuration.fields.NumberField;
 import org.graylog2.plugin.configuration.fields.TextField;
 
-import static java.util.Objects.requireNonNull;
+import com.google.common.collect.ImmutableList;
+
+import io.lettuce.core.ClientOptions;
+import io.lettuce.core.resource.DefaultClientResources;
 
 public class RedisClientConfiguration extends ConfigurationRequest {
     public static final String CK_REDIS_URI = "redis_uri";

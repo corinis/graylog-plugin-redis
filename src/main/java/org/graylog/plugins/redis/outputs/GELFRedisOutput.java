@@ -16,13 +16,20 @@
  */
 package org.graylog.plugins.redis.outputs;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.inject.assistedinject.Assisted;
-import com.lambdaworks.redis.RedisClient;
-import com.lambdaworks.redis.codec.ByteArrayCodec;
-import com.lambdaworks.redis.pubsub.api.sync.RedisPubSubCommands;
+import static java.util.Objects.requireNonNull;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+
 import org.graylog.plugins.redis.internal.RedisClientBuilder;
 import org.graylog.plugins.redis.internal.RedisClientConfiguration;
 import org.graylog2.plugin.Message;
@@ -41,18 +48,13 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
-import javax.inject.Inject;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.inject.assistedinject.Assisted;
 
-import static java.util.Objects.requireNonNull;
+import io.lettuce.core.RedisClient;
+import io.lettuce.core.pubsub.api.sync.RedisPubSubCommands;
 
 public class GELFRedisOutput implements MessageOutput {
     private static final Logger LOG = LoggerFactory.getLogger(GELFRedisOutput.class);
@@ -83,7 +85,7 @@ public class GELFRedisOutput implements MessageOutput {
     }
 
     private static RedisPubSubCommands<byte[], byte[]> buildRedisPubSubCommands(RedisClient redisClient) {
-        return redisClient.connectPubSub(new ByteArrayCodec()).sync();
+        return redisClient.connectPubSub(new io.lettuce.core.codec.ByteArrayCodec()).sync();
     }
 
     @VisibleForTesting

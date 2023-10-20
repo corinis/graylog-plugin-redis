@@ -16,9 +16,8 @@
  */
 package org.graylog.plugins.redis.inputs;
 
-import com.codahale.metrics.MetricRegistry;
-import com.google.inject.assistedinject.Assisted;
-import com.google.inject.assistedinject.AssistedInject;
+import javax.inject.Inject;
+
 import org.graylog.plugins.redis.transports.RedisTransport;
 import org.graylog2.inputs.codecs.GelfCodec;
 import org.graylog2.plugin.LocalMetricRegistry;
@@ -28,7 +27,9 @@ import org.graylog2.plugin.inputs.MessageInput;
 import org.graylog2.plugin.inputs.annotations.ConfigClass;
 import org.graylog2.plugin.inputs.annotations.FactoryClass;
 
-import javax.inject.Inject;
+import com.codahale.metrics.MetricRegistry;
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 
 public class GELFRedisInput extends MessageInput {
 
