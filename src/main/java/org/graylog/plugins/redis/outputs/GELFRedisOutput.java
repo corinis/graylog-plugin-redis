@@ -24,10 +24,15 @@ import com.lambdaworks.redis.RedisClient;
 import com.lambdaworks.redis.codec.ByteArrayCodec;
 import com.lambdaworks.redis.pubsub.api.sync.RedisPubSubCommands;
 import org.graylog.plugins.redis.internal.RedisClientBuilder;
+import org.graylog.plugins.redis.internal.RedisClientConfiguration;
 import org.graylog2.plugin.Message;
 import org.graylog2.plugin.ServerStatus;
 import org.graylog2.plugin.Tools;
 import org.graylog2.plugin.configuration.Configuration;
+import org.graylog2.plugin.configuration.ConfigurationRequest;
+import org.graylog2.plugin.configuration.fields.ConfigurationField;
+import org.graylog2.plugin.configuration.fields.TextField;
+import org.graylog2.plugin.inputs.annotations.ConfigClass;
 import org.graylog2.plugin.inputs.annotations.FactoryClass;
 import org.graylog2.plugin.outputs.MessageOutput;
 import org.graylog2.plugin.outputs.MessageOutputConfigurationException;
@@ -52,7 +57,7 @@ import static java.util.Objects.requireNonNull;
 public class GELFRedisOutput implements MessageOutput {
     private static final Logger LOG = LoggerFactory.getLogger(GELFRedisOutput.class);
 
-    static final String CK_CHANNEL = "redis_channel";
+    private static final String CK_CHANNEL = "redis_channel";
 
     private final AtomicBoolean isRunning = new AtomicBoolean(false);
     private final RedisClient redisClient;
@@ -215,10 +220,24 @@ public class GELFRedisOutput implements MessageOutput {
         GELFRedisOutput create(Stream stream, Configuration configuration);
 
         @Override
-        GELFRedisOutputConfig getConfig();
+        GELFRedisOutput.Config getConfig();
 
         @Override
         GELFRedisOutput.Descriptor getDescriptor();
+    }
+
+    @ConfigClass
+    public static class Config extends MessageOutput.Config {
+        @Override
+        public ConfigurationRequest getRequestedConfiguration() {
+            final RedisClientConfiguration r = new RedisClientConfiguration(super.getRequestedConfiguration());
+            r.addField(new TextField(CK_CHANNEL,
+                    "Channel",
+                    "",
+                    "Name of the channel to publish messages to",
+                    ConfigurationField.Optional.NOT_OPTIONAL));
+            return r;
+        }
     }
 
     public static class Descriptor extends MessageOutput.Descriptor {
