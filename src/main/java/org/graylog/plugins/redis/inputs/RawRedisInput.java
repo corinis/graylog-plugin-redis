@@ -25,7 +25,6 @@ import org.graylog2.plugin.LocalMetricRegistry;
 import org.graylog2.plugin.ServerStatus;
 import org.graylog2.plugin.configuration.Configuration;
 import org.graylog2.plugin.inputs.MessageInput;
-import org.graylog2.plugin.inputs.annotations.ConfigClass;
 import org.graylog2.plugin.inputs.annotations.FactoryClass;
 
 import javax.inject.Inject;
@@ -40,7 +39,7 @@ public class RawRedisInput extends MessageInput {
                          RedisTransport.Factory transportFactory,
                          RawCodec.Factory codecFactory,
                          LocalMetricRegistry localRegistry,
-                         Config config, Descriptor descriptor,
+                         RawRedisInputConfig config, Descriptor descriptor,
                          ServerStatus serverStatus) {
         super(metricRegistry, configuration, transportFactory.create(configuration), localRegistry,
                 codecFactory.create(configuration), config, descriptor, serverStatus);
@@ -52,7 +51,7 @@ public class RawRedisInput extends MessageInput {
         RawRedisInput create(Configuration configuration);
 
         @Override
-        Config getConfig();
+        RawRedisInputConfig getConfig();
 
         @Override
         Descriptor getDescriptor();
@@ -62,14 +61,6 @@ public class RawRedisInput extends MessageInput {
         @Inject
         public Descriptor() {
             super(NAME, false, "");
-        }
-    }
-
-    @ConfigClass
-    public static class Config extends MessageInput.Config {
-        @Inject
-        public Config(RedisTransport.Factory transport, RawCodec.Factory codec) {
-            super(transport.getConfig(), codec.getConfig());
         }
     }
 }
